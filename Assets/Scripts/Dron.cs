@@ -15,7 +15,7 @@ public class DronePatrol : MonoBehaviour{
 	public float alertIncreaseRate = 1f;
 	public float alertDecreaseRate = 1.5f;
 	public float alertThreshold = 3f;
-	public float visionAngle = 90f; // Ángulo de visión en grados
+	public float visionAngle = 90f;
 	public AudioClip alarm;
 	public GameObject alertUI;
 	public Image alertBar;
@@ -42,6 +42,10 @@ public class DronePatrol : MonoBehaviour{
 		}
 
 		currentIndex = Mathf.Clamp(startIndex, 0, waypoints.Length - 1);
+		foreach (var waypoint in waypoints)
+		{
+			waypoint.GetComponent<SpriteRenderer>().enabled = false;
+		}
 		transform.position = waypoints[currentIndex].position;
 		StartCoroutine(Patrol());
 	}
