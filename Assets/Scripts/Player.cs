@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -30,10 +31,41 @@ public class Player : MonoBehaviour
 		Cursor.lockState = CursorLockMode.Locked;
 	}
 
+	private RaycastHit hit;
+	private Notes currentNote;
+
+
 	void Update()
 	{
+		ViewNote();
 		LookAround();
 		Move();
+	}
+
+	private void ViewNote()
+	{
+		Debug.DrawRay(playerCamera.position, playerCamera.forward * 3f, Color.red);
+		if (Physics.Raycast(playerCamera.position, playerCamera.forward, out hit, 3f))
+		{
+			if (hit.transform.CompareTag("Note"))
+			{
+				currentNote = hit.transform.GetComponent<Notes>();
+				if (Input.GetKeyDown(KeyCode.E))
+				{
+					currentNote.ShowNote();
+				}
+			}
+			else if (currentNote != null)
+			{
+				currentNote.HideNote();
+				currentNote = null;
+			}
+		}
+		else if (currentNote != null)
+		{
+			currentNote.HideNote();
+			currentNote = null;
+		}
 	}
 
 	void LookAround()
