@@ -1,22 +1,21 @@
 using UnityEngine;
 
-public class DoorAnimator : MonoBehaviour
-{
+public class Door : MonoBehaviour{
 	public Transform upperPart;
 	public Transform lowerPart;
-	public float openDistance = 1.75f;
-	public float openSpeed = 2f;
-	public float activationRange = 3f; // Distancia mínima para abrir la puerta
+	public float openDistance = 3f;
+	public float openSpeed = 4.25f;
 
-	private Vector3 upperClosedPos;
-	private Vector3 lowerClosedPos;
-	private Vector3 upperOpenPos;
-	private Vector3 lowerOpenPos;
+	protected bool isOpen;
+	protected Vector3 lowerClosedPos;
+	protected Vector3 lowerOpenPos;
 
-	private bool isOpen = false;
+	protected Vector3 upperClosedPos;
+	protected Vector3 upperOpenPos;
 
-	void Start()
-	{
+	protected virtual void Start(){
+		openSpeed = 4.25f;
+		openDistance = 3f;
 		upperClosedPos = upperPart.localPosition;
 		lowerClosedPos = lowerPart.localPosition;
 
@@ -24,26 +23,28 @@ public class DoorAnimator : MonoBehaviour
 		lowerOpenPos = lowerClosedPos + Vector3.down * openDistance;
 	}
 
-	void Update()
-	{
+	protected virtual void Update(){
+		var isPlayerInRange = Vector3.Distance(transform.position, Player.instance.transform.position) <= openDistance;
+		if (isPlayerInRange && !isOpen)
+			OpenDoor();
+		else if (!isPlayerInRange && isOpen) CloseDoor();
 
-		float distanceToPlayer = Vector3.Distance(transform.position, Player.instance.transform.position);
-		bool shouldOpen = distanceToPlayer <= activationRange;
+		MoveDoor();
+	}
 
-		if (shouldOpen && !isOpen)
-		{
-			isOpen = true;
-		}
-		else if (!shouldOpen && isOpen)
-		{
-			isOpen = false;
-		}
-
-		// Movimiento suave
-		Vector3 targetUpper = isOpen ? upperOpenPos : upperClosedPos;
-		Vector3 targetLower = isOpen ? lowerOpenPos : lowerClosedPos;
+	protected void MoveDoor(){
+		var targetUpper = isOpen ? upperOpenPos : upperClosedPos;
+		var targetLower = isOpen ? lowerOpenPos : lowerClosedPos;
 
 		upperPart.localPosition = Vector3.MoveTowards(upperPart.localPosition, targetUpper, openSpeed * Time.deltaTime);
 		lowerPart.localPosition = Vector3.MoveTowards(lowerPart.localPosition, targetLower, openSpeed * Time.deltaTime);
+	}
+
+	public void OpenDoor(){
+		isOpen = true;
+	}
+
+	public void CloseDoor(){
+		isOpen = false;
 	}
 }

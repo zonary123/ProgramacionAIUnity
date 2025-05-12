@@ -42,10 +42,7 @@ public class DronePatrol : MonoBehaviour{
 		}
 
 		currentIndex = Mathf.Clamp(startIndex, 0, waypoints.Length - 1);
-		foreach (var waypoint in waypoints)
-		{
-			waypoint.GetComponent<SpriteRenderer>().enabled = false;
-		}
+		foreach (var waypoint in waypoints) waypoint.GetComponent<SpriteRenderer>().enabled = false;
 		transform.position = waypoints[currentIndex].position;
 		StartCoroutine(Patrol());
 	}
@@ -122,6 +119,7 @@ public class DronePatrol : MonoBehaviour{
 			Debug.Log("🔊 ¡ALARMA ACTIVADA!");
 			if (!audioSource.isPlaying)
 				audioSource.Play();
+			GameManager.instance.AlertNearbyGuardians(transform.position, 20f);
 		}
 
 		if (alertLevel <= 0f && audioSource.isPlaying)

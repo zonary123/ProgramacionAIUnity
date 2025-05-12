@@ -1,43 +1,77 @@
+using System.Collections;
 using UnityEngine;
 
-public class Notes : MonoBehaviour
-{
-    [SerializeField]
-    private int id;
-    [SerializeField]
-    private string noteText;
-    [SerializeField]
-    private int number;
-    [SerializeField]
-    private GameObject textDisplay; // Asigna el GameObject hijo con el TextMesh
+public class Notes : MonoBehaviour{
+	[SerializeField] private int id;
+	[SerializeField] private int number;
+	[SerializeField] private GameObject noteUIPrefab;
 
-    private void Awake()
-    {
-        if (textDisplay != null)
-            textDisplay.SetActive(false); // Ocultar al inicio
-    }
+	private GameObject currentNoteUI;
+	private bool isPlayerInRange;
+	private bool noteIsVisible;
+	private Coroutine notificationCoroutine;
 
-    public void ShowNote()
-    {
-        if (textDisplay != null)
-        {
-            textDisplay.SetActive(true);
-            TextMesh mesh = textDisplay.GetComponent<TextMesh>();
-            if (mesh != null)
-            {
-                mesh.text = $"Nota #{number}:\n{noteText}";
-            }
+	private void Update(){
+		isPlayerInRange = Vector3.Distance(transform.position, Player.instance.transform.position) <= 3f;
 
-            // Opcional: girar el texto hacia el jugador
-            Transform cam = Camera.main.transform;
-            textDisplay.transform.LookAt(cam);
-            textDisplay.transform.Rotate(0, 180, 0); 
-        }
-    }
+		if (isPlayerInRange && !noteIsVisible){
+			GameManager.instance.ShowNotification($"Presiona E para leer la nota #{id}");
 
-    public void HideNote()
-    {
-        if (textDisplay != null)
-            textDisplay.SetActive(false);
-    }
+			if (Input.GetKeyDown(KeyCode.E)) ShowNote();
+		}
+		else if (!isPlayerInRange && noteIsVisible){
+			HideNote();
+		}
+		else if (isPlayerInRange && noteIsVisible && Input.GetKeyDown(KeyCode.E)){
+			HideNote();
+		}
+	}
+
+	public void ShowNote(){
+		if (notificationCoroutine != null) StopCoroutine(notificationCoroutine);
+		notificationCoroutine = StartCoroutine(HideNotificationCoroutine());
+
+		ShowNoteUI();
+		noteIsVisible = true;
+	}
+
+	private void HideNote(){
+		HideNoteUI();
+		noteIsVisible = false;
+
+		if (notificationCoroutine != null){
+			StopCoroutine(notificationCoroutine);
+			notificationCoroutine = null;
+		}
+
+		GameManager.instance.HideNotification();
+	}
+
+	private void ShowNoteUI(){
+		if (noteUIPrefab == null || currentNoteUI != null) return;
+
+		var canvas = FindObjectOfType<Canvas>();
+		if (canvas == null){
+			Debug.LogWarning("No se encontró un Canvas en la escena.");
+			return;
+		}
+
+		currentNoteUI = Instantiate(noteUIPrefab, canvas.transform);
+
+		var display = currentNoteUI.GetComponent<NoteUIDisplay>();
+		if (display != null) display.SetNoteInfo($"Nota #{id}", number.ToString());
+	}
+
+	private void HideNoteUI(){
+		if (currentNoteUI != null){
+			Destroy(currentNoteUI);
+			currentNoteUI = null;
+		}
+	}
+
+	private IEnumerator HideNotificationCoroutine(){
+		yield return new WaitForSeconds(0.5f);
+		GameManager.instance.HideNotification();
+		notificationCoroutine = null;
+	}
 }
