@@ -60631,7 +60631,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   m_UseGeometry: 0
   m_DefaultArea: 0
-  m_GenerateLinks: 1
+  m_GenerateLinks: 0
   m_IgnoreNavMeshAgent: 1
   m_IgnoreNavMeshObstacle: 1
   m_OverrideTileSize: 0
@@ -60639,7 +60639,7 @@ MonoBehaviour:
   m_OverrideVoxelSize: 0
   m_VoxelSize: 0.16666667
   m_MinRegionArea: 2
-  m_NavMeshData: {fileID: 23800000, guid: d5a26bf540ed22342b4559f10ed385ea, type: 2}
+  m_NavMeshData: {fileID: 23800000, guid: 7a497adf2eb31bd4b901c75cbda2e5e3, type: 2}
   m_BuildHeightMesh: 1
 --- !u!4 &1735986638
 Transform:
@@ -66777,6 +66777,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8695630fac69e1d4b89381a8acdce607, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  globalCanvas: {fileID: 1974805804}
   notificationText: {fileID: 479008254}
 --- !u!4 &1913184919
 Transform:
