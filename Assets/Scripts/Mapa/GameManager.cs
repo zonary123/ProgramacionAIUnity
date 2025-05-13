@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour{
 	public static GameManager instance;
+	public Canvas globalCanvas;
 	[SerializeField] private TMP_Text notificationText;
 
 	private void Awake(){

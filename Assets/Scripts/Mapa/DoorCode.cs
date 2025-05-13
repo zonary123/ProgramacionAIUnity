@@ -40,7 +40,7 @@ public class DoorCode : Door{
 	}
 
 	private void ShowCodePanel(){
-		currentPanel = Instantiate(codePanelPrefab, FindObjectOfType<Canvas>().transform);
+		currentPanel = Instantiate(codePanelPrefab, GameManager.instance.globalCanvas.transform);
 		var ui = currentPanel.GetComponent<CodePanelUI>();
 
 		// Mostrar cursor y pausar el tiempo

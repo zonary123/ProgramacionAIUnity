@@ -78,7 +78,7 @@ public class Notes : MonoBehaviour{
 	private void ShowNoteUI(){
 		if (noteUIPrefab == null || currentNoteUI != null) return;
 
-		var canvas = FindObjectOfType<Canvas>();
+		var canvas = GameManager.instance.globalCanvas;
 		if (canvas == null){
 			Debug.LogWarning("No se encontró un Canvas en la escena.");
 			return;
