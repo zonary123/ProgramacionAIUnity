@@ -1,12 +1,16 @@
+using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class DoorCode : Door{
 	public string correctCode = "1234";
 	public GameObject codePanelPrefab;
 	public float activationRange = 3f;
 
-	private GameObject currentPanel;
-	private bool isUnlocked;
+	[SerializeField] private bool win;
+
+	[SerializeField] private GameObject currentPanel;
+	[SerializeField] private bool isUnlocked;
 
 	private void Awake(){
 		CloseDoor();
@@ -52,11 +56,17 @@ public class DoorCode : Door{
 		if (enteredCode == correctCode){
 			isUnlocked = true;
 			CloseCodePanel();
+			if (win) StartCoroutine(LoadWinScene());
 		}
 		else{
 			var ui = currentPanel.GetComponent<CodePanelUI>();
 			ui.ShowError("Código incorrecto");
 		}
+	}
+
+	private IEnumerator LoadWinScene(){
+		yield return new WaitForSeconds(5f);
+		SceneManager.LoadScene("WinScene");
 	}
 
 	private void CloseCodePanel(){

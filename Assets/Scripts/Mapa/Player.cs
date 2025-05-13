@@ -35,7 +35,8 @@ public class Player : MonoBehaviour{
 	private void ViewNote(){
 		Debug.DrawRay(playerCamera.position, playerCamera.forward * 3f, Color.red);
 		if (Physics.Raycast(playerCamera.position, playerCamera.forward, out hit, 3f))
-			if (hit.transform.CompareTag("Note")){
+			if (hit.transform.CompareTag("HidingPlace")){ }
+			else if (hit.transform.CompareTag("Note")){
 				currentNote = hit.transform.GetComponent<Notes>();
 				if (Input.GetKeyDown(KeyCode.E)) currentNote.ShowNote();
 			}
